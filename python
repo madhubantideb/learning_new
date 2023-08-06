@@ -1,0 +1,44 @@
+#lambda arguments: expression
+
+square = lambda x , y: x + y  # square is a function
+print(square(4))
+
+
+# Lambda with map() Function (transformation to an iterable object)
+
+numbers = [2, 4, 5, 6, 3]
+squared_result = list(map(lambda x: x**2, numbers))
+print(squared_result)
+
+# Lambda with Filter() Function
+
+numbers = [10, 11,12, 13, 14, 15, 16, 17, 18, 19, 20]
+even_numbers = list(filter(lambda x: x % 2 == 0, numbers))
+print(even_numbers) 
+
+
+# Lambda with reduce() Function (cumulative way in iterable, and returns a single value)
+
+from functools import reduce
+numbers = [1, 2, 3, 4, 5]
+product = reduce(lambda x, y: x+y, numbers)
+print(product) 
+
+
+**************************************************************************************************
+#print("Hello World!")
+
+#new_msg1 = "My name is 'MAdhubanti'"
+#print(new_msg1)
+
+#new_msg2 = "My name is 'Bhutan'"
+#print(new_msg2)
+
+#new_msg2 = "My name is Madhubanti's Deb"
+#print(new_msg2)
+
+name = "madhubanti deb"
+
+print(name.title())
+
+print(name.translate())
