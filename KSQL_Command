@@ -1,0 +1,549 @@
+
+ 
+####
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --list | grep PTDMSYS_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --group $t --reset-offsets --all-topics --to-earliest --execute; done
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --list | grep PTDMSYS_SINK_LPI_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --group $t --describe --execute; done
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+/bin/kafka-topics --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --delete --topic ptdmsys.ksql.lpi_temp_msg
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+/bin/kafka-topics --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --list
+
+/bin/kafka-console-consumer --bootstrap-server cilkafkd0005.sys.cigna.com:9095 --topic ptdmsys.ksql.lpi_msg --from-beginning
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+/bin/kafka-topics --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --alter --topic ptdmsys.ksql.lpi_msg --config cleanup.policy=compact
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+/bin/kafka-configs --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --entity-type topics --entity-name ptdmsys.ksql.lpi_msg --alter --add-config cleanup.policy=compact
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_prd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --list | grep PTDMPRD_SINK_NT_PROV_PANEL_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkd0004.sys.cigna.com:9095 --group $t --describe --execute; done
+
+
+
+
+
+------------------**********************--------
+
+$describe <streem_name> extended;
+
+$Select * from <stream> where <condition> emit changes;
+
+$print '<Topic_name>' from beginning ;
+
+------------------------------
+Topic Alter the partition in Kafka Sink POD
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf  -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprod.jks"
+/usr/bin/kafka-topics --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafks0004.sys.cigna.com:9095 --topic 'ptdmint.ksql.prov_addr_msg' --alter --partitions 8
+
+--------------------------
+Topic Describe in Kafka Sink POD
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf  -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprod.jks"
+/usr/bin/kafka-topics --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafks0004.sys.cigna.com:9095 --topic 'hcpmint03.portico.pp_udg' --describe
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+describe PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG;
+
+
+,
+  "prov_cntrct_cvrg_cvr_entty_msg": {
+        "topic": "ptdm<ENV>.ksql.prov_cntrct_cvrg_cvr_entty_msg",
+        "active": "True",
+        "fields": "SRC_COVERED_ENTITY_ID,SRC_SYS_CD,SRC_PROV_ID,SRC_PRACTNR_ID,SRC_CNTRCT_CVRG_ID,EFF_DT,TERMNTN_DT,TERMNTN_REASON,AUD_OPERN_CD,AUD_USR_ID,AUD_RBA,AUD_COMMIT_ID,AUD_TIMESTMP,DEL_TIMESTMP"
+}
+
+
+
+----------------------
+
+--------------------
+----------------------------------------------------------------------------------
+----------------------- cn_covered_entity deltastreams ---------------------------
+----------------------------------------------------------------------------------
+CREATE STREAM IF NOT EXISTS hcpm<ENV>_portico_cn_covered_entity_dlt_strm (
+       ID STRING,
+	   ENTITY_ID STRING,
+       CONTR_COVERAGE_ID STRING,
+       START_DATE STRING,
+       END_DATE STRING,
+	   TERM_REASON STRING,
+       AUD_OPER STRING,
+       AUD_USR_ID STRING,
+       AUD_RBA STRING,
+       AUD_COMMIT_ID STRING,
+       AUD_TMPS STRING
+)
+WITH (PARTITIONS=<DEFAULT_PARTITIONS>,
+KAFKA_TOPIC='hcpm<ENV>03.portico.cn_covered_entity',
+TIMESTAMP='AUD_TMPS',
+TIMESTAMP_FORMAT='yyyy-MM-dd''T''HH:mm:ss.SSS''000000000''',
+VALUE_FORMAT='<VALUE_FORMAT>');
+
+
+----------------------------------------------------------------------------------Select ENTITY_ID from hcpmrel_ksql_cn_covered_entity_hist_strm where ENTITY_ID is not null;
+----------------- cn_covered_entity history streams --------------------
+----------------------------------------------------------------------------------
+CREATE STREAM IF NOT EXISTS hcpm<ENV>_ksql_cn_covered_entity_hist_strm (
+       ROWKEY STRING KEY,
+       ID STRING,
+	   ENTITY_ID STRING,
+       CONTR_COVERAGE_ID STRING,
+       START_DATE STRING,
+       END_DATE STRING,
+	   TERM_REASON STRING,
+       AUD_OPER STRING,
+       AUD_USR_ID STRING,
+       AUD_RBA STRING,
+       AUD_COMMIT_ID STRING,
+       AUD_TMPS STRING)
+WITH (PARTITIONS=<DEFAULT_PARTITIONS>,
+KAFKA_TOPIC='hcpm<ENV>.ksql.cn_covered_entity',
+TIMESTAMP='AUD_TMPS',
+TIMESTAMP_FORMAT='yyyy-MM-dd''T''HH:mm:ss.SSS''000000000''',
+VALUE_FORMAT='<VALUE_FORMAT>');
+
+
+
+INSERT INTO hcpm<ENV>_ksql_cn_covered_entity_hist_strm
+SELECT
+    DELTA.ID AS ROWKEY,
+	AS_VALUE(DELTA.ID) AS ID,
+	DELTA.ENTITY_ID AS ENTITY_ID,
+    DELTA.CONTR_COVERAGE_ID AS CONTR_COVERAGE_ID,
+    DELTA.START_DATE AS START_DATE,
+    DELTA.END_DATE AS END_DATE,
+	DELTA.TERM_REASON AS TERM_REASON,
+    DELTA.AUD_OPER AS AUD_OPER,
+    DELTA.AUD_USR_ID AS AUD_USR_ID,
+    DELTA.AUD_RBA AS AUD_RBA,
+    DELTA.AUD_COMMIT_ID AS AUD_COMMIT_ID,
+    DELTA.AUD_TMPS AS AUD_TMPS
+FROM hcpm<ENV>_portico_cn_covered_entity_dlt_strm DELTA
+PARTITION BY DELTA.ID
+EMIT CHANGES;
+----------------------------------------------------------------------------------
+------------------------- pv_entities reference table ----------------------------
+----------------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS hcpm<ENV>_ksql_pv_entities_enriched_tbl (
+    ROWKEY STRING PRIMARY KEY,
+    ID STRING,
+    DS STRING,
+    ENTITY_TYPE_ID STRING,
+    RELATION_ID STRING,
+    ENTITY_TYPE STRING,
+    AUD_OPER STRING,
+    AUD_USR_ID STRING,
+    AUD_RBA STRING,
+    AUD_COMMIT_ID STRING,
+    AUD_TMPS STRING
+)
+WITH (PARTITIONS=<DEFAULT_PARTITIONS>,
+KAFKA_TOPIC='hcpm<ENV>.ksql.pv_entities_enriched',
+TIMESTAMP='AUD_TMPS',
+TIMESTAMP_FORMAT='yyyy-MM-dd''T''HH:mm:ss.SSS''000000000''',
+VALUE_FORMAT='<VALUE_FORMAT>');
+
+
+--------
+SET 'auto.offset.reset'='earliest';
+----------------------------------------------------------------------------------
+----------------------------- cntrct_cvrg_prov_msg ---------------------------------
+----------------------------------------------------------------------------------
+CREATE STREAM IF NOT EXISTS ptdm<ENV>_ksql_prov_cntrct_cvrg_cvr_entty_msg
+  WITH (PARTITIONS=<DEFAULT_PARTITIONS>,
+  KAFKA_TOPIC='ptdm<ENV>.ksql.prov_cntrct_cvrg_cvr_entty_msg',
+  TIMESTAMP='AUD_TIMESTMP',
+  TIMESTAMP_FORMAT='yyyy-MM-dd''T''HH:mm:ss.SSS''000000000''',
+  VALUE_FORMAT='<VALUE_FORMAT>')
+AS SELECT
+    cce.ROWKEY AS ROWKEY,
+    cce.ID AS SRC_COVERED_ENTITY_ID,
+    'HCPM' AS SRC_SYS_CD,
+    CASE
+        WHEN pv.ENTITY_TYPE = 'Provider' THEN  pv.RELATION_ID
+        ELSE  CAST(NULL AS STRING)
+    END AS SRC_PROV_ID,
+    CASE
+        WHEN pv.ENTITY_TYPE = 'Practitioner' THEN  pv.RELATION_ID
+        ELSE  CAST(NULL AS STRING)
+    END AS SRC_PRACTNR_ID,
+    cce.CONTR_COVERAGE_ID AS SRC_CNTRCT_CVRG_ID,
+    cce.START_DATE AS EFF_DT,
+    cce.END_DATE AS TERMNTN_DT,
+	cce.TERM_REASON AS TERMNTN_REASON,
+    cce.AUD_OPER AS AUD_OPERN_CD,
+    cce.AUD_USR_ID AS AUD_USR_ID,
+    cce.AUD_RBA AS AUD_RBA,
+    cce.AUD_COMMIT_ID AS AUD_COMMIT_ID,
+    cce.AUD_TMPS AS AUD_TIMESTMP,
+    CASE WHEN cce.AUD_OPER = 'DL' THEN cce.AUD_TMPS
+         ELSE NULL END AS DEL_TIMESTMP
+FROM hcpm<ENV>_ksql_cn_covered_entity_hist_strm cce
+    INNER JOIN hcpm<ENV>_ksql_pv_entities_enriched_tbl pv ON cce.ENTITY_ID = pv.ROWKEY
+WHERE pv.ENTITY_TYPE IN ('Provider','Practitioner')
+PARTITION BY cce.ROWKEY
+EMIT CHANGES;
+
+
+------------------
+
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafks0004.sys.cigna.com:9095 --list | grep PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafks0004.sys.cigna.com:9095 --group $t --describe --execute; done
+
+
+GROUP                                               TOPIC                                       PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                                                           HOST            CLIENT-ID
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 4          -               1966            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 2          -               2004            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 1          -               2060            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 7          -               1973            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 6          -               2066            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 0          -               1996            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 5          -               1968            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 3          -               2085            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-93aa12f8-c976-4fa1-afe4-f4b2019b4e32 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+[2023-06-29 16:26:26,641] WARN [Principal=SVT_HCPM_ADMIN@SILVER.COM]: TGT renewal thread has been interrupted and will exit. (org.apache.kafka.common.security.kerberos.KerberosLogin)
+
+--sink create
+GROUP                                               TOPIC                                       PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                                                           HOST            CLIENT-ID
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 4          -               3932            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 2          -               4008            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 1          -               4120            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 7          -               3946            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 6          -               4132            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 0          -               3992            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 5          -               3936            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 3          -               4170            -               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-db6738af-c1c0-4d95-8c5f-ac4044933b5c /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+[2023-06-29 16:42:03,247] WARN [Principal=SVT_HCPM_ADMIN@SILVER.COM]: TGT renewal thread has been interrupted and will exit. (org.apache.kafka.common.security.kerberos.KerberosLogin)
+
+                                                                                                    
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 4          5898            5898            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 2          6012            6012            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 1          6180            6180            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 7          5919            5919            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 6          6198            6198            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 0          5988            5988            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 5          5904            5904            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+connect-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg 3          6255            6255            0               connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0-4fc12fcc-4b6a-4013-977f-8a4958910e69 /10.29.44.190   connector-consumer-PTDMREL_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG-0
+[2023-06-29 19:05:20,450] WARN [Principal=SVT_HCPM_ADMIN@SILVER.COM]: TGT renewal thread has been interrupted and will exit. (org.apache.kafka.common.security.kerberos.KerberosLogin)
+------------------ESP Change----------------------------
+
+LINUX_JOB C1_GGDE_PTDMLZ_K_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG
+   AGENT %APPLAGT
+   USER %USER_ID_APP
+   SCRIPTNAME %SCRIPTEXECDB
+   ARGS SP_K_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG PTDMLZ_O NULL NULL NULL NULL
+   RUN ANYDAY
+   AFTER ADD(C1_GGDE_PTDMLZ_K_CNTRCT_CVRG_MSG)
+   RELEASE (C1_GGDE_PTDMLZ_K_SP_CNTRCT_CVRG_RT_EXHB_MSG)
+ENDJOB
+
+
+---------------------------------------------------2023.07.01.33c2dbdd-------------------------------
+
+
+DML :
+
+Select * from PTDMLZ_O.PROCS_STAT_CD where PROCS_STAT_CD IN (1518,1519);
+
+DDL	:
+
+desc PRV_KFKA_LZ_O.PROV_CNTRCT_CVRG_CVR_ENTTY_MSG;
+
+desc PTDMLZ_O.PROV_CNTRCT_CVRG_CVR_ENTTY;
+
+desc PTDM_O.PROV_CNTRCT_CVRG_CVR_ENTTY;
+
+desc PTDM_O.PROV_CNTRCT_CVRG_CVR_ENTTY_TAB_ERR 	;
+
+sp : PTDMLZ_O.SP_K_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG
+
+--------------------------------------------------------
+
+INT:
+Select count(*) from portico.cn_covered_entity; --325078
+
+SIM:
+Select count(*) from portico.cn_covered_entity;--18302818
+
+
+PVS :
+Select count(*) from portico.cn_covered_entity;--20124112
+
+----------------------------------------------------------
+
+
+
+Select 
+CN.ID as SRC_CNTRCT_CVRG_PROV_ID,
+CN.CONTR_COVERAGE_ID as SRC_CNTRCT_CVRG_ID,
+CN.START_DATE as EFF_DT,
+CN.END_DATE as TERMNTN_DT,
+CN.TERM_REASON as TERM_REASON,
+PV.RELATION_ID as SRC_PROV_ID,
+NULL as SRC_PRACTNR_ID
+from 
+CN_COVERED_ENTITY CN
+inner join PV_ENTITIES PV
+ON CN.ENTITY_ID = PV.ID AND ENTITY_TYPE_ID = 1
+union
+Select 
+CN.ID as SRC_CNTRCT_CVRG_PROV_ID,
+CN.CONTR_COVERAGE_ID as SRC_CNTRCT_CVRG_ID,
+CN.START_DATE as EFF_DT,
+CN.END_DATE as TERMNTN_DT,
+CN.TERM_REASON as TERM_REASON,
+NULL as SRC_PROV_ID,
+PV.RELATION_ID as SRC_PRACTNR_ID
+from 
+CN_COVERED_ENTITY CN
+inner join PV_ENTITIES PV
+ON CN.ENTITY_ID = PV.ID AND ENTITY_TYPE_ID = 4; 
+
+
+------------------------------hcpm<ENV>_ksql_pv_entities_enriched_tbl REFRESH activity------------------------
+
+ptdmpvs_ksql_cntrcte_msg  --cntrcte_msg
+ptdmpvs_ksql_prov_undr_revw_msg  --prov_undr_revw_msg
+ptdmpvs_ksql_prov_grpng_msg  --prov_grpng_msg
+
+ptdmpvs_ksql_prov_cntrct_cvrg_cvr_entty_msg --cntrct_cvrg_cvr_entty_msg
+
+check bussness entity .....csas// before and after count for all the msg tables.
+
+16:53:56  ########## INFO: Connector PTDMREL_SINK_CNTRCTE_MSG pause 202
+16:53:59  ########## INFO: Connector PTDMREL_SINK_PROV_UNDR_REVW_MSG pause 202
+16:54:02  ########## INFO: Connector PTDMREL_SINK_PROV_GRPNG_MSG pause 202
+
+--------------Schema Registry-----------
+
+curl --insecure -X DELETE https://cilkafkv0002.sys.cigna.com:8081/subjects/hcpmpvs.ksql.pv_entities_enriched-value
+
+curl --insecure -X DELETE https://cilkafkv0002.sys.cigna.com:8081/subjects/hcpmpvs03.portico.cn_covered_entity-value
+
+curl --insecure -X DELETE https://cilkafkv0002.sys.cigna.com:8081/subjects/hcpmpvs.ksql.cn_covered_entity-value
+
+curl --insecure -X DELETE https://cilkafkv0002.sys.cigna.com:8081/subjects/ptdmpvs.ksql.prov_cntrct_cvrg_cvr_entty_msg-value
+
+---------------------------------------------
+
+if required only 
+
+{ "pv_entity_types" : { "WHERE" : "ID > 0" }}   -----------> Connector pv_entity_types has 0 lag, source is completed
+Starting 
+Total--2 mins
+
+if required only :
+{ "pv_entities" : { "WHERE" : "ID > 0" } } --------------->  Connector pv_entities has 0 lag, source is completed
+Starting 
+Total--26 mins
+total_lag = 88921    
+total_offsets = 1207381
+                                         	 total_offsets = 1564702
+{ "cn_covered_entity" : { "WHERE" : "ID > 0" } } -------------> onnector cn_covered_entity has 0 lag, source is completed
+
+Starting 
+Total--18 mins
+total_lag = 48131  
+total_offsets = 1564702
+
+select COUNT(distinct src_covered_entity_id) from prv_kfka_lz_o.prov_cntrct_cvrg_cvr_entty_msg;--19,674,655
+
+------------------------------------------------------------
+
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --list | grep connect-PTDMPVS_KSQL_CNTRCTE_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --group $t --reset-offsets --all-topics --to-latest --execute; done
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --list | grep connect-PTDMPVS_KSQL_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --group $t --reset-offsets --all-topics --to-latest --execute; done
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --list | grep connect-PTDMPVS_KSQL_PROV_UNDR_REVW_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --group $t --reset-offsets --all-topics --to-latest --execute; done
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --list | grep connect-PTDMPVS_KSQL_PROV_GRPNG_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --group $t --reset-offsets --all-topics --to-latest --execute; done
+
+
+-------------------
+
+15:03:21  ########## INFO: Connector PTDMPVS_SINK_CNTRCTE_MSG status 200
+15:03:21  {'id': 0,
+15:03:21   'state': 'PAUSED',
+15:03:21   'worker_id': 'sink-connect.pvs.eds.apps-2.gp-4-pvs.openshift.cignacloud.com:8083'}
+15:03:25  ########## INFO: Connector PTDMPVS_SINK_PROV_UNDR_REVW_MSG status 200
+15:03:25  {'id': 0,
+15:03:25   'state': 'PAUSED',
+15:03:25   'worker_id': 'sink-connect.pvs.eds.apps-2.gp-4-pvs.openshift.cignacloud.com:8083'}
+15:03:28  ########## INFO: Connector PTDMPVS_SINK_PROV_GRPNG_MSG status 200
+15:03:28  {'id': 0,
+15:03:28   'state': 'PAUSED',
+15:03:28   'worker_id': 'sink-connect.pvs.eds.apps-2.gp-4-pvs.openshift.cignacloud.com:8083'}
+15:03:31  ########## INFO: Connector PTDMPVS_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG status 200
+15:03:31  {'id': 0,
+15:03:31   'state': 'PAUSED',
+15:03:31   'worker_id': 'sink-connect.pvs.eds.apps-2.gp-4-pvs.openshift.cignacloud.com:8083'}
+15:03:34  + deactivate
+15:03:34  + unset -f pydoc
+
+
+describe PTDMPVS_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG;
+
+
+export KAFKA_OPTS="-Djava.security.krb5.conf=/opt/confluent/config/kafka.krb5.conf -Djava.security.auth.login.config=/opt/confluent/config/kafka_client_jaas.conf -Djavax.net.ssl.trustStore=/opt/confluent/config/kafka.client.truststore_nonprd.jks"
+TOPICS=$(sh /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --list | grep PTDMPVS_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG)
+for t in $TOPICS; do /bin/kafka-consumer-groups --command-config /opt/confluent/config/worker.prop --bootstrap-server cilkafkv0004.sys.cigna.com:9095 --group $t --describe --execute; done
+
+
+-----------------
+SIM 
+Select 'prov' as a ,count(*) from(
+Select 
+Distinct CN.ID as SRC_CNTRCT_CVRG_PROV_ID
+from 
+CN_COVERED_ENTITY CN
+inner join PV_ENTITIES PV
+ON CN.ENTITY_ID = PV.ID AND ENTITY_TYPE_ID = 1) --prov  1,186,080
+union all
+Select 'prac' as a ,count(*) from(
+Select 
+Distinct CN.ID as SRC_CNTRCT_CVRG_PROV_ID
+from 
+CN_COVERED_ENTITY CN
+inner join PV_ENTITIES PV
+ON CN.ENTITY_ID = PV.ID AND ENTITY_TYPE_ID = 4) --16,815,077; 
+
+
+
+select count(*) from (select  distinct src_prov_id,src_practnr_id,src_cntrct_cvrg_id,src_covered_entity_id from prv_kfka_lz_o.prov_cntrct_cvrg_cvr_entty_msg);--18001168
+
+
+
+INT 
+
+Select 'prov' as a ,count(*) from(
+Select 
+Distinct CN.ID as SRC_CNTRCT_CVRG_PROV_ID
+from 
+CN_COVERED_ENTITY CN
+inner join PV_ENTITIES PV
+ON CN.ENTITY_ID = PV.ID AND ENTITY_TYPE_ID = 1) --prov 56,189
+union all
+Select 'prac' as a ,count(*) from(
+Select 
+Distinct CN.ID as SRC_CNTRCT_CVRG_PROV_ID
+from 
+CN_COVERED_ENTITY CN
+inner join PV_ENTITIES PV
+ON CN.ENTITY_ID = PV.ID AND ENTITY_TYPE_ID = 4) --245,595
+
+
+PTDMSIM_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG
+
+PTDMSIM_SINK_PROV_CNTRCT_CVRG_CVR_ENTTY_MSG
+
+--------------------------------------------------------------------------------------------
+
+
+curl --insecure -X DELETE https://cilkafks0002.sys.cigna.com:8081/subjects/hcpmint.ksql.pv_entities_enriched-value
+
+curl --insecure -X DELETE https://cilkafks0002.sys.cigna.com:8081/subjects/hcpmint03.portico.cn_covered_entity-value
+
+curl --insecure -X DELETE https://cilkafks0002.sys.cigna.com:8081/subjects/hcpmint.ksql.cn_covered_entity-value
+
+curl --insecure -X DELETE https://cilkafks0002.sys.cigna.com:8081/subjects/ptdmint.ksql.prov_cntrct_cvrg_cvr_entty_msg-value
+
+curl --insecure -X DELETE https://cilkafks0002.sys.cigna.com:8081/subjects/ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg-value
+
+
+
+
+
+
+CREATE STREAM IF NOT EXISTS ptdmrel_ksql_prov_cntrct_cvrg_cvr_entty_msg
+  WITH (PARTITIONS=8,
+  KAFKA_TOPIC='ptdmrel.ksql.prov_cntrct_cvrg_cvr_entty_msg',
+  TIMESTAMP='AUD_TIMESTMP',
+  TIMESTAMP_FORMAT='yyyy-MM-dd''T''HH:mm:ss.SSS''000000000''',
+  VALUE_FORMAT='AVRO')
+AS SELECT
+    cce.ROWKEY AS ROWKEY,
+    cce.ID AS SRC_COVERED_ENTITY_ID,
+    'HCPM' AS SRC_SYS_CD,
+    CASE
+        WHEN pv.ENTITY_TYPE = 'Provider' THEN  pv.RELATION_ID
+        ELSE  CAST(NULL AS STRING)
+    END AS SRC_PROV_ID,
+    CASE
+        WHEN pv.ENTITY_TYPE = 'Practitioner' THEN  pv.RELATION_ID
+        ELSE  CAST(NULL AS STRING)
+    END AS SRC_PRACTNR_ID,
+    cce.CONTR_COVERAGE_ID AS SRC_CNTRCT_CVRG_ID,
+    cce.START_DATE AS EFF_DT,
+    cce.END_DATE AS TERMNTN_DT,
+	cce.TERM_REASON AS TERMNTN_REASON,
+    cce.AUD_OPER AS AUD_OPERN_CD,
+    cce.AUD_USR_ID AS AUD_USR_ID,
+    cce.AUD_RBA AS AUD_RBA,
+    cce.AUD_COMMIT_ID AS AUD_COMMIT_ID,
+    cce.AUD_TMPS AS AUD_TIMESTMP,
+    CASE WHEN cce.AUD_OPER = 'DL' THEN cce.AUD_TMPS
+         ELSE NULL END AS DEL_TIMESTMP
+FROM hcpmrel_ksql_cn_covered_entity_hist_strm cce
+    INNER JOIN hcpmrel_ksql_pv_entities_enriched_tbl pv ON cce.ENTITY_ID = pv.ROWKEY
+WHERE pv.ENTITY_TYPE IN ('Provider','Practitioner')
+PARTITION BY cce.ROWKEY
+EMIT CHANGES;
+
+
+
+
+
+
+prov_cntrct_cvrg_cvr_entty_msg": {
+        "topic": "ptdm<ENV>.ksql.prov_cntrct_cvrg_cvr_entty_msg",
+        "active": "True",
+        "fields": "SRC_COVERED_ENTITY_ID,SRC_SYS_CD,SRC_PROV_ID,SRC_PRACTNR_ID,SRC_CNTRCT_CVRG_ID,EFF_DT,TERMNTN_DT,TERMNTN_REASON,AUD_OPERN_CD,AUD_USR_ID,AUD_RBA,AUD_COMMIT_ID,AUD_TIMESTMP,DEL_TIMESTMP"
+},
+
+
+
+					 ROWKEY                | VARCHAR(STRING)  (key) 
+AUD_COMMIT_ID		AUD_COMMIT_ID			 AUD_COMMIT_ID         | VARCHAR(STRING)        
+AUD_OPERN_CD		AUD_OPERN_CD			 AUD_OPERN_CD          | VARCHAR(STRING)        
+AUD_RBA		AUD_RBA			 AUD_RBA               | VARCHAR(STRING)        
+AUD_TIMESTMP		AUD_TIMESTMP			 AUD_TIMESTMP          | VARCHAR(STRING)        
+AUD_USR_ID		AUD_USR_ID			 AUD_USR_ID            | VARCHAR(STRING)        
+DEL_TIMESTMP		DEL_TIMESTMP			 DEL_TIMESTMP          | VARCHAR(STRING)  
+EFF_DT		EFF_DT			 EFF_DT                | VARCHAR(STRING)        
+SRC_CNTRCT_CVRG_ID		SRC_CNTRCT_CVRG_ID			 SRC_CNTRCT_CVRG_ID    | VARCHAR(STRING)        
+SRC_COVERED_ENTITY_ID		SRC_COVERED_ENTITY_ID			 SRC_COVERED_ENTITY_ID | VARCHAR(STRING)        
+SRC_PRACTNR_ID		SRC_PRACTNR_ID			 SRC_PRACTNR_ID        | VARCHAR(STRING)        
+SRC_PROV_ID		SRC_PROV_ID			 SRC_PROV_ID           | VARCHAR(STRING)        
+SRC_SYS_CD		SRC_SYS_CD			 SRC_SYS_CD            | VARCHAR(STRING)        
+TERMNTN_DT		TERMNTN_DT			 TERMNTN_DT            | VARCHAR(STRING)        
+TERMNTN_REASON		TERMNTN_REASON			 TERMNTN_REASON        | VARCHAR(STRING)        
